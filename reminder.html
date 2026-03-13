@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤑 Friendly Money Reminder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            overflow-x: hidden;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            text-align: center;
+            animation: bounceIn 1s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .money-bag {
+            font-size: 4em;
+            margin: 20px 0;
+            animation: shake 2s infinite;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        .amount {
+            font-size: 2em;
+            color: #4ecdc4;
+            font-weight: bold;
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        .btn {
+            background: #ff9f43;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255,159,67,0.3);
+        }
+        .btn-success {
+            background: #4ecdc4;
+        }
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .counter {
+            font-size: 3em;
+            color: #ff6b6b;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="confetti" id="confetti"></div>
+    
+    <div class="container">
+        <div class="money-bag">💰</div>
+        <h1>Hey [Friend's Name]!</h1>
+        <p>A <strong>gentle</strong> reminder from your pal...</p>
+        
+        <div class="amount" id="amount">$50</div>
+        <p>You still owe me for that <em>epic</em> night out! 😄</p>
+        
+        <div class="counter" id="counter">Days overdue: <span id="days">0</span></div>
+        
+        <br>
+        <a href="https://venmo.com/yourusername" class="btn" target="_blank">Pay via Venmo</a>
+        <a href="https://paypal.me/yourusername" class="btn btn-success" target="_blank">Pay via PayPal</a>
+        
+        <p style="margin-top: 30px; font-size: 0.9em; color: #888;">
+            No pressure, just a friendly nudge! 🙏<br>
+            <strong>Love you bro!</strong>
+        </p>
+    </div>
+
+    <script>
+        // Customize these!
+        const AMOUNT = 290; // Change the amount
+        const FRIEND_NAME = "Utsho"; // Change friend's name
+        const DAYS_OVERDUE = 69; // Days since owed
+        const VENMO_LINK = "https://venmo.com/yourusername"; // Your Venmo
+        const PAYPAL_LINK = "https://paypal.me/yourusername"; // Your PayPal
+
+        // Update content
+        document.getElementById('amount').textContent = `$${AMOUNT}`;
+        document.querySelector('h1').textContent = `Hey ${FRIEND_NAME}!`;
+        document.getElementById('days').textContent = DAYS_OVERDUE;
+
+        // Update payment links
+        document.querySelector('.btn').href = VENMO_LINK;
+        document.querySelector('.btn-success').href = PAYPAL_LINK;
+
+        // Days counter (real-time)
+        const owedDate = new Date();
+        owedDate.setDate(owedDate.getDate() - DAYS_OVERDUE);
+        function updateCounter() {
+            const now = new Date();
+            const diffTime = Math.abs(now - owedDate);
+            const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.getElementById('days').textContent = days;
+        }
+        updateCounter();
+        setInterval(updateCounter, 24 * 60 * 60 * 1000); // Update daily
+
+        // Fun confetti on load
+        function confetti() {
+            const confetti = document.getElementById('confetti');
+            for (let i = 0; i < 100; i++) {
+                const flake = document.createElement('div');
+                flake.style.position = 'fixed';
+                flake.style.left = Math.random() * 100 + '%';
+                flake.style.width = Math.random() * 10 + 5 + 'px';
+                flake.style.height = flake.style.width;
+                flake.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                flake.style.top = '-10px';
+                flake.style.pointerEvents = 'none';
+                flake.style.animation = `fall ${3 + Math.random() * 2}s linear forwards`;
+                confetti.appendChild(flake);
+                
+                setTimeout(() => flake.remove(), 5000);
+            }
+        }
+        
+        // Add confetti animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Shake effect on click
+        document.querySelector('.container').addEventListener('click', function() {
+            this.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                this.style.animation = 'bounceIn 0.5s';
+            }, 500);
+            confetti();
+        });
+
+        // Auto confetti after 2 seconds
+        setTimeout(confetti, 2000);
+    </script>
+</body>
+</html>
